@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-const WORKFLOW_URL = "";
+const WORKFLOW_URL = "WORKFLOW_URL"; // Agregar ?minimal=true para quitar el header de la UI del workflow
 
 // Extraer la JavaScript inyectada a una constante para mejor legibilidad y reutilización
 const INJECTED_JAVASCRIPT = `
@@ -15,10 +14,12 @@ const INJECTED_JAVASCRIPT = `
 `;
 
 const handleOnMessage = (event) => {
-  console.log(event.nativeEvent.data);
+  const { entity, value } = JSON.parse(event.nativeEvent.data)
+
+  return entity === 'workflow' && value.status !== 'pristine';
 };
 
-const WebViewScreen = () => {
+function WebViewScreen ({ navigation }) {
   return (
     <WebView
       source={{ uri: WORKFLOW_URL }}
@@ -30,10 +31,21 @@ const WebViewScreen = () => {
       javaScriptEnabled
       domStorageEnabled
       allowFileAccess
-      onMessage={handleOnMessage}
+      onMessage={(event) => {
+        if (handleOnMessage(event)) {
+          // Success or Error but going back to HomeScreen
+          navigation.navigate('Home');
+        } else {
+          // Debugging
+          console.log(event.nativeEvent.data);
+        }
+      }}
+
+      // NOTA: inyectar este JavaScript en el WebView es necesario por si existe un error referente a este bug
+      // https://bugs.chromium.org/p/chromium/issues/detail?id=1401352#c12
       injectedJavaScript={INJECTED_JAVASCRIPT}
     />
   );
-};
+}
 
 export default WebViewScreen;

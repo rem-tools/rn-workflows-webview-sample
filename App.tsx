@@ -6,12 +6,7 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from './screens/HomeScreen';

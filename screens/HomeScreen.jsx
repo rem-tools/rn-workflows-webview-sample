@@ -1,10 +1,10 @@
 import React from 'react'
-import { Button } from 'react-native'
+import { Button, View } from 'react-native'
 
-const HomeScreen = () => {
+function HomeScreen ({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button title="Abrir WebView" onPress={() => navigation.navigate('WebView')} />
+      <Button title="Abrir Workflow" onPress={() => navigation.navigate('WebView')} />
     </View>
   )
 }
